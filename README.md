@@ -4,8 +4,8 @@
 ### Github
 * create README.md in PyCharm
 * install plugin
-* VCS ==> Enable Version Control Integration ==> Git
 * if cant find *.md , go File / setting / file type / markdown + *.md 
+* VCS ==> Enable Version Control Integration ==> Git
 * MLLab ==> right click==> git ==> add
 * Git / Commit directory
 * open course to iris
