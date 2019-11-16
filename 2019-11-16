@@ -1,0 +1,277 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+# pip install seaborn
+from sklearn import datasets
+import seaborn as sns
+# load iris
+iris = datasets.load_iris()
+df1 = pd.DataFrame(iris.data, columns=iris.feature_names)
+print(df1.shape)
+
+df1['species'] = np.array([iris.target_names[i] for i in iris.target])
+sns.pairplot(df1, hue='species')
+plt.show()
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+# pip install seaborn
+from sklearn import datasets
+import seaborn as sns
+# load iris
+iris = datasets.load_iris()
+df1 = pd.DataFrame(iris.data, columns=iris.feature_names)
+print(df1.shape)
+
+df1['species'] = np.array([iris.target_names[i] for i in iris.target])
+sns.pairplot(df1, hue='species')
+plt.show()
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(df1[iris.feature_names], iris.target,
+                                                    test_size=0.2, stratify=iris.target)
+from sklearn.ensemble import RandomForestClassifier
+rf1 = RandomForestClassifier(n_estimators=100, oob_score=True)
+rf1.fit(X_train, y_train)
+
+from sklearn.metrics import accuracy_score
+predicted = rf1.predict(X_test)
+accuracy = accuracy_score(y_test, predicted)
+print(f'OOB estimator {rf1.oob_score_:.3}')
+print(f'mean accuracy {accuracy:.3}')
+
+from sklearn.metrics import confusion_matrix
+cm = pd.DataFrame(confusion_matrix(y_test, predicted), columns=iris.target_names, index=iris.target_names)
+sns.heatmap(cm, annot=True)
+plt.show()
+
+~!~~~~~~~~
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from sklearn import datasets
+from sklearn.decomposition import PCA
+
+iris = datasets.load_iris()
+
+X = iris.data
+species = iris.target
+
+fig = plt.figure(1, figsize=(8,8))
+ax = Axes3D(fig, elev=-150, azim=110)
+X_reduced = PCA(n_components=3).fit_transform(iris.data)
+ax.scatter(X_reduced[:,0],X_reduced[:,1],X_reduced[:,2],c=species, cmap=plt.cm.Paired)
+
+plt.show()
+
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from sklearn import datasets
+from sklearn.decomposition import PCA
+
+iris = datasets.load_iris()
+
+X = iris.data
+species = iris.target
+
+fig = plt.figure(1, figsize=(8,8))
+ax = Axes3D(fig, elev=-150, azim=110)
+X_reduced = PCA(n_components=3).fit_transform(iris.data)
+ax.scatter(X_reduced[:,0],X_reduced[:,1],X_reduced[:,2],c=species, cmap=plt.cm.Paired)
+
+ax.set_title("3 CPA direction")
+ax.set_xlabel("1st eigen value")
+ax.set_ylabel("2nd eigne value")
+ax.set_zlabel("3rd eigen value")
+ax.w_xaxis.set_ticklabels([])
+ax.w_yaxis.set_ticklabels([])
+ax.w_zaxis.set_ticklabels([])
+plt.show()
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from sklearn import datasets
+from sklearn.decomposition import PCA
+
+iris = datasets.load_iris()
+
+X = iris.data
+species = iris.target
+
+fig = plt.figure(1, figsize=(8, 8))
+ax = Axes3D(fig, elev=-150, azim=110)
+print(plt.cm.get_cmap())
+# print(d)
+
+# magma, plasma, viridis
+# https://matplotlib.org/3.1.0/tutorials/colors/colormaps.html
+X_reduced = PCA(n_components=3).fit_transform(iris.data)
+ax.scatter(X_reduced[:, 0], X_reduced[:, 1], X_reduced[:, 2], c=species, cmap=plt.get_cmap("viridis"))
+
+ax.set_title("3 CPA direction")
+ax.set_xlabel("1st eigen value")
+ax.set_ylabel("2nd eigne value")
+ax.set_zlabel("3rd eigen value")
+ax.w_xaxis.set_ticklabels([])
+ax.w_yaxis.set_ticklabels([])
+ax.w_zaxis.set_ticklabels([])
+plt.show()
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+import matplotlib.pyplot as plt
+import numpy as np
+from sklearn import datasets
+from sklearn import svm
+from sklearn.decomposition import PCA
+
+iris = datasets.load_iris()
+
+pca = PCA(n_components=2)
+
+data = pca.fit(iris.data).transform(iris.data)
+print(pca.explained_variance_ratio_)
+print(data.shape)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+import matplotlib.pyplot as plt
+import numpy as np
+from sklearn import datasets
+from sklearn import svm
+from sklearn.decomposition import PCA
+
+iris = datasets.load_iris()
+
+pca = PCA(n_components=2)
+
+data = pca.fit(iris.data).transform(iris.data)
+print(pca.explained_variance_ratio_)
+print(data.shape)
+
+datamax = data.max(axis=0) + 1
+datamin = data.min(axis=0) - 1
+n = 4000
+X, Y = np.meshgrid(np.linspace(datamin[0], datamax[0], n),
+                   np.linspace(datamin[1], datamax[1], n))
+svc = svm.SVC()
+svc.fit(data, iris.target)
+Z = svc.predict(np.c_[X.ravel(), Y.ravel()])
+plt.contour(X, Y, Z.reshape(X.shape), levels=[-0.5, 0.5, 1.5, 2.5], colors=['c', 'm', 'y', 'k'])
+for i, c in zip([0, 1, 2], ['r', 'g', 'b']):
+    d = data[iris.target == i]
+    plt.scatter(d[:, 0], d[:, 1], c=c)
+plt.show()
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+from numpy import array
+from sklearn.decomposition import PCA
+
+A = array([[1, 2, 3], [3, 4, 5], [5, 6, 7], [7, 8, 9]])
+print(A)
+
+pca = PCA(2)
+pca.fit(A)
+print("components", pca.components_)
+print("variance", pca.explained_variance_)
+B = pca.transform(A)
+print(B)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+from numpy import array
+from numpy import cov
+from numpy import mean
+from numpy.linalg import eig
+
+A = array([[1, 2, 3], [3, 4, 5], [5, 6, 7], [7, 8, 9]])
+print(A)
+M = mean(A.T, axis=1)
+print(M)
+M2 = mean(A.T)
+print(M2)
+M3 = mean(A, axis=1)
+print(M3)
+C = A-M
+print(C)
+V = cov(C.T)
+print(V)
+values, vectors = eig(V)
+print("vectors,",vectors)
+print("values", values)
+P = vectors.T.dot(C.T)
+print("project", P.T)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+pip install tensorflow
+
+
+import tensorflow as tf
+
+hello1 = tf.constant('hello tensorflow from python3.7')
+print(tf.__version__)
+print(hello1)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+conda create -n tf2py37 python=3.7
+conda activate tf2py37
+conda deactivate
+
+conda install tensorflow-gpu
+
+conda create -n tf2py37intel python=3.7
+conda activate tf2py37intel
+conda install tensorflow
+conda deactivate
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+NVidiaLab
+
+
+conda info --envs
+
+C:\Users\Admin\.conda\envs\tf2py37\python.exe
+
+import tensorflow as tf
+
+hello1 = tf.constant('hello tensorflow from Nvidia CUDA/CUDNN')
+print(tf.__version__)
+print(hello1)
+
+
+IntelCondaLab
+C:\Users\Admin\.conda\envs\tf2py37intel\python.exe
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+import tensorflow as tf
+
+tf.compat.v1.disable_eager_execution()
+hello1 = tf.constant('hello tensorflow from python3.7')
+print(tf.__version__)
+with tf.compat.v1.Session() as session:
+    print(session.run(hello1))
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+import tensorflow as tf
+import numpy as np
+
+print(tf.__version__)
+
+a = np.array([5, 3, 8])
+b = np.array([3, -1, 8])
+c = np.add(a, b)
+print(c)
+
+a2 = tf.constant([5.0, 3.4, 8.5])
+b2 = tf.constant([3, -1.0, 2.9])
+c2 = tf.add(a2, b2)
+print(c2)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+import tensorflow as tf
+import numpy as np
+
+tf.compat.v1.disable_eager_execution()
+print(tf.__version__)
+
+a = np.array([5, 3, 8])
+b = np.array([3, -1, 8])
+c = np.add(a, b)
+print(c)
+
+a2 = tf.constant([5.0, 3, 8])
+b2 = tf.constant([3, -1, 2])
+c2 = tf.add(a2, b2)
+print(c2)
