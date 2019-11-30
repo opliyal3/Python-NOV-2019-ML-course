@@ -1,0 +1,258 @@
+jupyter-notebook
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+num_rows = 5
+num_cols = 4
+num_images = num_rows*num_cols
+def plot_image(i, predictions_array, true_label, image):
+    predictions_array, true_label, image=predictions_array, true_label[i], image[i]
+    plt.grid(False)
+    plt.xticks([])
+    plt.yticks([])
+    plt.imshow(image, cmap=plt.cm.binary)
+
+    predicted_label = np.argmax(predictions_array)
+    if predicted_label == true_label:
+        color='blue'
+    else:
+        color='red'
+    plt.xlabel(f"{classNames[predicted_label]} {100*np.max(predictions_array)} V.S. {classNames[true_label]}",
+              color=color)
+plt.figure(figsize=(3*2*num_cols, 3*num_rows))
+for i in range(num_images):
+    plt.subplot(num_rows, 2*num_cols, 2*i+1)
+    plot_image(i, predictions[i], test_labels, test_images)
+
+~~~~~~~~~~~~~~~~~~~~~~~~
+num_rows = 5
+num_cols = 4
+num_images = num_rows*num_cols
+def plot_image(i, predictions_array, true_label, image):
+    predictions_array, true_label, image=predictions_array, true_label[i], image[i]
+    plt.grid(False)
+    plt.xticks([])
+    plt.yticks([])
+    plt.imshow(image, cmap=plt.cm.binary)
+
+    predicted_label = np.argmax(predictions_array)
+    if predicted_label == true_label:
+        color='blue'
+    else:
+        color='red'
+    plt.xlabel(f"{classNames[predicted_label]} {100*np.max(predictions_array)} V.S. {classNames[true_label]}",
+              color=color)
+plt.figure(figsize=(3*2*num_cols, 3*num_rows))
+
+def plot_value_array(i, predictions_array, true_label):
+    predictions_array, true_label = predictions_array, true_label[i]
+    plt.grid(False)
+    plt.xticks(range(10))
+    plt.yticks([])
+    thisPlot = plt.bar(range(10), predictions_array, color="#c0FFEE")
+    plt.ylim([0,1])
+    predicted_label = np.argmax(predictions_array)
+    thisPlot[predicted_label].set_color('red')
+    thisPlot[true_label].set_color('blue')
+
+for i in range(num_images):
+    plt.subplot(num_rows, 2*num_cols, 2*i+1)
+    plot_image(i, predictions[i], test_labels, test_images)
+    plt.subplot(num_rows, 2*num_cols, 2*i+2)
+    plot_value_array(i, predictions[i], test_labels)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+num_rows = 5
+num_cols = 4
+num_images = num_rows*num_cols
+def plot_image(i, predictions_array, true_label, image):
+    predictions_array, true_label, image=predictions_array, true_label[i], image[i]
+    plt.grid(False)
+    plt.xticks([])
+    plt.yticks([])
+    plt.imshow(image, cmap=plt.cm.binary)
+
+    predicted_label = np.argmax(predictions_array)
+    if predicted_label == true_label:
+        color='blue'
+    else:
+        color='red'
+    plt.xlabel(f"{classNames[predicted_label]} {100*np.max(predictions_array)} V.S. {classNames[true_label]}",
+              color=color)
+plt.figure(figsize=(3*2*num_cols, 3*num_rows))
+
+def plot_value_array(i, predictions_array, true_label):
+    predictions_array, true_label = predictions_array, true_label[i]
+    plt.grid(False)
+    plt.xticks(range(10))
+    plt.yticks([])
+    thisPlot = plt.bar(range(10), predictions_array, color="#c0FFEE")
+    plt.ylim([0,1])
+    predicted_label = np.argmax(predictions_array)
+    thisPlot[predicted_label].set_color('red')
+    thisPlot[true_label].set_color('blue')
+
+for i in range(num_images):
+    plt.subplot(num_rows, 2*num_cols, 2*i+1)
+    plot_image(i, predictions[i], test_labels, test_images)
+    plt.subplot(num_rows, 2*num_cols, 2*i+2)
+    plot_value_array(i, predictions[i], test_labels)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+demo54-->demo56
+import tensorflow as tf
+import numpy as np
+from keras import datasets, utils, layers, Sequential
+
+(train_images, train_labels), (test_images, test_labels) = datasets.mnist.load_data()
+print(train_images.shape)
+flattenDim = 28 * 28
+TRAINING_SIZE = len(train_images)
+TEST_SIZE = len(test_images)
+
+# convert 28, 28 to 28*28=784 (elements)
+trainImages = np.reshape(train_images, (TRAINING_SIZE, flattenDim))
+testImages = np.reshape(test_images, (TEST_SIZE, flattenDim))
+print(type(trainImages[0]))
+
+trainImages = trainImages.astype(np.float32)
+testImages = testImages.astype(np.float32)
+print(type(trainImages))
+trainImages /= 255
+testImages /= 255
+
+# NUM_DIGITS = 10
+# trainLabels = utils.to_categorical(train_labels, NUM_DIGITS)
+# testLabels = utils.to_categorical(test_labels, NUM_DIGITS)
+# print(trainLabels[0])
+# print(trainImages[0])
+
+model = Sequential()
+model.add(layers.Dense(units=256, activation=tf.nn.relu, input_shape=(flattenDim,)))
+model.add(layers.Dense(units=128, activation=tf.nn.relu))
+model.add(layers.Dense(units=10, activation=tf.nn.softmax))
+# 2. change loss function
+model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+model.summary()
+
+# 1. change back to [0-->n-1]
+model.fit(trainImages, train_labels, epochs=20)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+import tensorflow as tf
+import numpy as np
+from keras import datasets, utils, layers, Sequential
+from keras.layers import Flatten
+
+# load model
+(train_images, train_labels), (test_images, test_labels) = datasets.mnist.load_data()
+print(train_images.shape)
+
+#convert input image to float
+trainImages = train_images.astype(np.float32)
+testImages = test_images.astype(np.float32)
+print(type(trainImages))
+trainImages /= 255
+testImages /= 255
+
+
+model = Sequential()
+# whatever data is, flatten
+model.add(Flatten(input_shape=(28,28)))
+model.add(layers.Dense(units=256, activation=tf.nn.relu))
+model.add(layers.Dense(units=128, activation=tf.nn.relu))
+# for categorical, (more than 1)
+model.add(layers.Dense(units=10, activation=tf.nn.softmax))
+# 2. change loss function
+model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+model.summary()
+
+# 1. change back to [0-->n-1]
+model.fit(trainImages, train_labels, epochs=20)
+
+tensorboard
+
+cd\
+
+mkdir tensor_log
+
+cd tensor_log
+
+tbCallback  = callbacks.TensorBoard(log_dir='C:\\tensor_log', histogram_freq=0, write_graph=True, write_images=True)
+
+model.fit(trainImages, train_labels, epochs=20, callbacks=[tbCallback])
+
+
+tensorboard --logdir c:\tensor_log
+
+http://localhost:6006/
+
+
+demo57
+
+import tensorflow as tf
+import numpy as np
+from keras import datasets, utils, layers, Sequential, callbacks
+from keras.layers import Flatten
+
+# load model
+(train_images, train_labels), (test_images, test_labels) = datasets.mnist.load_data()
+print(train_images.shape)
+
+#convert input image to float
+trainImages = train_images.astype(np.float32)
+testImages = test_images.astype(np.float32)
+print(type(trainImages))
+trainImages /= 255
+testImages /= 255
+
+
+model = Sequential()
+# whatever data is, flatten
+model.add(Flatten(input_shape=(28,28)))
+model.add(layers.Dense(units=256, activation=tf.nn.relu))
+model.add(layers.Dense(units=128, activation=tf.nn.relu))
+# for categorical, (more than 1)
+model.add(layers.Dense(units=10, activation=tf.nn.softmax))
+# 2. change loss function
+model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+model.summary()
+model.fit(trainImages, train_labels, epochs=20)
+
+
+train_history = model.fit(trainImages, train_labels, epochs=20, validation_split=0.2)
+
+%matplotlib inline
+import matplotlib.pyplot as plt
+
+plt.plot(train_history.history['accuracy'], color='red')
+plt.plot(train_history.history['val_accuracy'], color='green')
+plt.legend(['train', 'validation'])
+
+
+predictLabels = model.predict_classes(testImages)
+predictLabels[:10]
+
+def plotTestImage(index):
+    plt.title('the image marked as %d, predict as %d'%(test_labels[index], predictLabels[index]))
+    plt.imshow(test_images[index], cmap='binary')
+    return plt
+
+
+plotTestImage(0)
+
+import pandas as pd
+pd.crosstab(test_labels, predictLabels, rownames=['label'], colnames=['predict'])
+
+mappingTable = pd.DataFrame({'label':test_labels, 'predict':predictLabels})
+mappingTable[:10]
+
+mappingTable[(mappingTable.label==2)&(mappingTable.predict==7)]
+
+
+errorList = mappingTable[(mappingTable.label==2)&(mappingTable.predict==7)].index
+for i in errorList:
+    print(i)
+    plotTestImage(i)
+
+~~~~~~~~~~~~~
+def plotTestImage(index):
+    plt.title('the image marked as %d, predict as %d'%(test_labels[index], predictLabels[index]))
+    plt.imshow(test_images[index], cmap='binary')
+    plt.show()
