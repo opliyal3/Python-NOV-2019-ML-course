@@ -1,6 +1,6 @@
 # 09-Nov-2019
 ## Last modified: 09-Nov-22019
-* Learning Tensorflow and Keras from UCOM恆逸
+* Learning Maching learning course with Pandas, scikit-learn, Tensorflow, Keras, numpy... from UCOM恆逸
 ### Github
 * create README.md in PyCharm
 * install plugin
